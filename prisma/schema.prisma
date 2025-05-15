@@ -11,70 +11,83 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id              Int       @id @default(autoincrement())
-  firstname       String
-  lastname        String
-  username        String?
-  avatarUrl       String?
-  phone           String
-  email           String    @unique
-  password        String
-  userType        UserType
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  Home            Home[]
-  buyerMessages   Message[] @relation("buyerMessage")
-  realtorMessages Message[] @relation("realtorMessage")
+model UserAccount {
+  id                Int            @id @default(autoincrement())
+  first_name        String
+  last_name         String
+  user_name         String?
+  avatar_url        String?
+  phone             String
+  email_address     String         @unique
+  password          String
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+  date_host_started DateTime?
+  property          Property[]
+  UserLanguage      UserLanguage[]
 }
 
-model Home {
-  id                Int          @id @default(autoincrement())
-  address           String
-  numberOfBedrooms  Int
-  numberOfBathrooms Int
-  city              String
-  listedDate        DateTime     @default(now())
-  price             Float
-  landSize          Float
-  propertyType      PropertyType
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
-  images            Image[]
-  realtorId         Int
-  realtor           User         @relation(fields: [realtorId], references: [id])
-  message           Message[]
+model Property {
+  id                 Int         @id @default(autoincrement())
+  property_name      String
+  address            String
+  description        String
+  num_bedrooms       Int
+  num_beds           Int
+  num_bathrooms      Int
+  is_guest_favourite Boolean
+  night_price        Float
+  created_at         DateTime    @default(now())
+  updated_at         DateTime    @updatedAt
+  images             Image[]
+  host_id            Int
+  host               UserAccount @relation(fields: [host_id], references: [id])
+  location           Location?   @relation(fields: [location_id], references: [id])
+  location_id        String?
 }
 
 model Image {
-  id        Int      @id @default(autoincrement())
-  url       String
-  homeId    Int
-  home      Home     @relation(fields: [homeId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  url         String
+  property_id Int
+  property    Property @relation(fields: [property_id], references: [id])
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 }
 
-model Message {
-  id        Int      @id @default(autoincrement())
-  message   String
-  homeId    Int
-  home      Home     @relation(fields: [homeId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  realtorId Int
-  realtor   User     @relation("buyerMessage", fields: [realtorId], references: [id])
-  buyerId   Int
-  buyer     User     @relation("realtorMessage", fields: [buyerId], references: [id])
+model Language {
+  id            Int            @id @default(autoincrement())
+  language_name String
+  UserLanguage  UserLanguage[]
 }
 
-enum UserType {
-  BUYER
-  REALTOR
-  ADMIN
+model UserLanguage {
+  user_account_id Int
+  language_id     Int
+  user            UserAccount @relation(fields: [user_account_id], references: [id])
+  language        Language    @relation(fields: [language_id], references: [id])
+
+  @@id([user_account_id, language_id])
 }
 
-enum PropertyType {
-  RESIDENTIAL
-  CONDO
+model Region {
+  id          Int       @id @default(autoincrement())
+  region_name String
+  countries   Country[]
+}
+
+model Country {
+  id           String     @id
+  country_name String
+  region       Region?    @relation(fields: [region_id], references: [id])
+  region_id    Int?
+  locations    Location[]
+}
+
+model Location {
+  id            String     @id
+  location_name String
+  country       Country?   @relation(fields: [country_id], references: [id])
+  country_id    String?
+  property      Property[]
 }

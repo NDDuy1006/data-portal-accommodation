@@ -74,6 +74,7 @@ Nest is [MIT licensed](LICENSE).
 
 
 Run Prisma Update Database:
+npx prisma migrate dev
 npm run prisma:dev:deploy
 
 Run The App:
@@ -81,3 +82,6 @@ npm run db:dev:start
 npm start
 
 database - duongduyngo997@gmail.com - supabase - password: password1006741***
+
+
+old database URL:"postgresql://postgres.sqdkpywpnejgqiqrteck:long-ass-password@aws-0-us-west-1.pooler.supabase.com:5432/postgres"

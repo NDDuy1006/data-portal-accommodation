@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HomeResponseDto } from './dto/HomeResponseDto';
-import { PropertyType, UserType } from '@prisma/client';
 import { HomeCreatePayload } from './payloads/HomeCreatePayload';
 import { HomeUpdatePayload } from './payloads/HomeUpdatePayload';
 import { ResolvedUser } from 'src/user/auth/dtos/ResolvedUserDto';
@@ -16,7 +15,7 @@ interface FilterParams {
     gte?: number;
     lte?: number;
   };
-  propertyType?: PropertyType;
+  // propertyType?: PropertyType;
 }
 
 @Injectable()
@@ -24,12 +23,12 @@ export class HomeService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getAll(filter: FilterParams): Promise<HomeResponseDto[]> {
-    const homes = await this.prismaService.home.findMany({
+    const homes = await this.prismaService.property.findMany({
       select: {
         id: true,
         address: true,
-        numberOfBedrooms: true,
-        numberOfBathrooms: true,
+        num_bedrooms: true,
+        num_bathrooms: true,
         city: true,
         listedDate: true,
         price: true,
