@@ -71,3 +71,13 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+
+Run Prisma Update Database:
+npm run prisma:dev:deploy
+
+Run The App:
+npm run db:dev:start
+npm start
+
+database - duongduyngo997@gmail.com - supabase - password: password1006741***
