@@ -23,27 +23,30 @@ model UserAccount {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   dateHostStarted DateTime?
-  property        Property[]
+  properties      Property[]
   UserLanguage    UserLanguage[]
 }
 
 model Property {
-  id               Int         @id @default(autoincrement())
-  propertyName     String
-  address          String
-  description      String
-  numBedrooms      Int
-  numBeds          Int
-  numBathrooms     Int
-  isGuestFavourite Boolean
-  nightPrice       Float
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-  images           Image[]
-  hostId           Int
-  host             UserAccount @relation(fields: [hostId], references: [id])
-  location         Location?   @relation(fields: [locationId], references: [id])
-  locationId       String?
+  id                Int                 @id @default(autoincrement())
+  propertyName      String
+  address           String
+  description       String
+  numBedrooms       Int
+  numBeds           Int
+  numBathrooms      Int
+  isGuestFavourite  Boolean
+  nightPrice        Float
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  images            Image[]
+  hostId            Int
+  host              UserAccount         @relation(fields: [hostId], references: [id])
+  location          Location?           @relation(fields: [locationId], references: [id])
+  locationId        String?
+  PropertyAttribute PropertyAttribute[]
+  PlaceType         PlaceType           @relation(fields: [placeTypeId], references: [id])
+  placeTypeId       Int
 }
 
 model Image {
@@ -79,15 +82,44 @@ model Region {
 model Country {
   id          String     @id
   countryName String
-  region      Region?    @relation(fields: [regionId], references: [id])
-  regionId    Int?
+  region      Region     @relation(fields: [regionId], references: [id])
+  regionId    Int
   locations   Location[]
 }
 
 model Location {
   id           String     @id
   locationName String
-  country      Country?   @relation(fields: [countryId], references: [id])
-  countryId    String?
-  property     Property[]
+  country      Country    @relation(fields: [countryId], references: [id])
+  countryId    String
+  properties   Property[]
+}
+
+model AttributeCategory {
+  id           Int         @id @default(autoincrement())
+  categoryName String
+  attributes   Attribute[]
+}
+
+model Attribute {
+  id Int @id @default(autoincrement())
+
+  AttributeCategory   AttributeCategory   @relation(fields: [attributeCategoryId], references: [id])
+  attributeCategoryId Int
+  PropertyAttribute   PropertyAttribute[]
+}
+
+model PropertyAttribute {
+  propertyId  Int
+  attributeId Int
+  property    Property  @relation(fields: [propertyId], references: [id])
+  attribute   Attribute @relation(fields: [attributeId], references: [id])
+
+  @@id([propertyId, attributeId])
+}
+
+model PlaceType {
+  id         Int        @id @default(autoincrement())
+  typeName   String
+  properties Property[]
 }
