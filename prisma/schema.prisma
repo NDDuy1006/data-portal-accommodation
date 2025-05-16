@@ -24,7 +24,9 @@ model UserAccount {
   updatedAt       DateTime       @updatedAt
   dateHostStarted DateTime?
   properties      Property[]
-  UserLanguage    UserLanguage[]
+  userLanguage    UserLanguage[]
+  favourite       Favourite[]
+  UserReview      UserReview[]
 }
 
 model Property {
@@ -47,7 +49,9 @@ model Property {
   PropertyAttribute PropertyAttribute[]
   PlaceType         PlaceType           @relation(fields: [placeTypeId], references: [id])
   placeTypeId       Int
-  PropertyCategory  PropertyCategory[]
+  propertyCategory  PropertyCategory[]
+  favourite         Favourite[]
+  UserReview        UserReview[]
 }
 
 model Image {
@@ -62,7 +66,9 @@ model Image {
 model Language {
   id           Int            @id @default(autoincrement())
   languageName String
-  UserLanguage UserLanguage[]
+  userLanguage UserLanguage[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 }
 
 model UserLanguage {
@@ -70,6 +76,8 @@ model UserLanguage {
   languageId    Int
   user          UserAccount @relation(fields: [userAccountId], references: [id])
   language      Language    @relation(fields: [languageId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 
   @@id([userAccountId, languageId])
 }
@@ -78,6 +86,8 @@ model Region {
   id         Int       @id @default(autoincrement())
   regionName String
   countries  Country[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model Country {
@@ -86,6 +96,8 @@ model Country {
   region      Region     @relation(fields: [regionId], references: [id])
   regionId    Int
   locations   Location[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Location {
@@ -94,20 +106,26 @@ model Location {
   country      Country    @relation(fields: [countryId], references: [id])
   countryId    String
   properties   Property[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 model AttributeCategory {
   id           Int         @id @default(autoincrement())
   categoryName String
   attributes   Attribute[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 }
 
 model Attribute {
   id Int @id @default(autoincrement())
 
-  AttributeCategory   AttributeCategory   @relation(fields: [attributeCategoryId], references: [id])
+  attributeCategory   AttributeCategory   @relation(fields: [attributeCategoryId], references: [id])
   attributeCategoryId Int
-  PropertyAttribute   PropertyAttribute[]
+  propertyAttribute   PropertyAttribute[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
 }
 
 model PropertyAttribute {
@@ -115,6 +133,8 @@ model PropertyAttribute {
   attributeId Int
   property    Property  @relation(fields: [propertyId], references: [id])
   attribute   Attribute @relation(fields: [attributeId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@id([propertyId, attributeId])
 }
@@ -123,12 +143,16 @@ model PlaceType {
   id         Int        @id @default(autoincrement())
   typeName   String
   properties Property[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 model Category {
   id               Int                @id @default(autoincrement())
   categoryName     String
   PropertyCategory PropertyCategory[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 }
 
 model PropertyCategory {
@@ -136,6 +160,52 @@ model PropertyCategory {
   categoryId Int
   property   Property @relation(fields: [propertyId], references: [id])
   category   Category @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@id([propertyId, categoryId])
+}
+
+model Favourite {
+  userAccountId Int
+  propertyId    Int
+  userAccount   UserAccount @relation(fields: [userAccountId], references: [id])
+  property      Property    @relation(fields: [propertyId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@id([userAccountId, propertyId])
+}
+
+model ReviewComponent {
+  id              Int               @id @default(autoincrement())
+  componentName   String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  ComponentRating ComponentRating[]
+}
+
+model ComponentRating {
+  rating            Int
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  reviewId          Int
+  review            UserReview      @relation(fields: [reviewId], references: [id])
+  reviewComponentId Int
+  component         ReviewComponent @relation(fields: [reviewComponentId], references: [id])
+
+  @@id([reviewId, reviewComponentId])
+}
+
+model UserReview {
+  id              Int               @id @default(autoincrement())
+  overall_rating  Int
+  comment         String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  propertyId      Int
+  userAccountId   Int
+  userAccount     UserAccount       @relation(fields: [userAccountId], references: [id])
+  property        Property          @relation(fields: [propertyId], references: [id])
+  ComponentRating ComponentRating[]
 }

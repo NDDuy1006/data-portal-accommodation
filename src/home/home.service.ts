@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HomeResponseDto } from './dto/HomeResponseDto';
-import { PropertyType, UserType } from '@prisma/client';
 import { HomeCreatePayload } from './payloads/HomeCreatePayload';
 import { HomeUpdatePayload } from './payloads/HomeUpdatePayload';
 import { ResolvedUser } from 'src/user/auth/dtos/ResolvedUserDto';
