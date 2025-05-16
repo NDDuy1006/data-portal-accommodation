@@ -12,82 +12,82 @@ datasource db {
 }
 
 model UserAccount {
-  id                Int            @id @default(autoincrement())
-  first_name        String
-  last_name         String
-  user_name         String?
-  avatar_url        String?
-  phone             String
-  email_address     String         @unique
-  password          String
-  created_at        DateTime       @default(now())
-  updated_at        DateTime       @updatedAt
-  date_host_started DateTime?
-  property          Property[]
-  UserLanguage      UserLanguage[]
+  id              Int            @id @default(autoincrement())
+  firstName       String
+  lastName        String
+  userName        String?
+  avatarUrl       String?
+  phone           String
+  emailAddress    String         @unique
+  password        String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  dateHostStarted DateTime?
+  property        Property[]
+  UserLanguage    UserLanguage[]
 }
 
 model Property {
-  id                 Int         @id @default(autoincrement())
-  property_name      String
-  address            String
-  description        String
-  num_bedrooms       Int
-  num_beds           Int
-  num_bathrooms      Int
-  is_guest_favourite Boolean
-  night_price        Float
-  created_at         DateTime    @default(now())
-  updated_at         DateTime    @updatedAt
-  images             Image[]
-  host_id            Int
-  host               UserAccount @relation(fields: [host_id], references: [id])
-  location           Location?   @relation(fields: [location_id], references: [id])
-  location_id        String?
+  id               Int         @id @default(autoincrement())
+  propertyName     String
+  address          String
+  description      String
+  numBedrooms      Int
+  numBeds          Int
+  numBathrooms     Int
+  isGuestFavourite Boolean
+  nightPrice       Float
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  images           Image[]
+  hostId           Int
+  host             UserAccount @relation(fields: [hostId], references: [id])
+  location         Location?   @relation(fields: [locationId], references: [id])
+  locationId       String?
 }
 
 model Image {
-  id          Int      @id @default(autoincrement())
-  url         String
-  property_id Int
-  property    Property @relation(fields: [property_id], references: [id])
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  url        String
+  propertyId Int
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Language {
-  id            Int            @id @default(autoincrement())
-  language_name String
-  UserLanguage  UserLanguage[]
+  id           Int            @id @default(autoincrement())
+  languageName String
+  UserLanguage UserLanguage[]
 }
 
 model UserLanguage {
-  user_account_id Int
-  language_id     Int
-  user            UserAccount @relation(fields: [user_account_id], references: [id])
-  language        Language    @relation(fields: [language_id], references: [id])
+  userAccountId Int
+  languageId    Int
+  user          UserAccount @relation(fields: [userAccountId], references: [id])
+  language      Language    @relation(fields: [languageId], references: [id])
 
-  @@id([user_account_id, language_id])
+  @@id([userAccountId, languageId])
 }
 
 model Region {
-  id          Int       @id @default(autoincrement())
-  region_name String
-  countries   Country[]
+  id         Int       @id @default(autoincrement())
+  regionName String
+  countries  Country[]
 }
 
 model Country {
-  id           String     @id
-  country_name String
-  region       Region?    @relation(fields: [region_id], references: [id])
-  region_id    Int?
-  locations    Location[]
+  id          String     @id
+  countryName String
+  region      Region?    @relation(fields: [regionId], references: [id])
+  regionId    Int?
+  locations   Location[]
 }
 
 model Location {
-  id            String     @id
-  location_name String
-  country       Country?   @relation(fields: [country_id], references: [id])
-  country_id    String?
-  property      Property[]
+  id           String     @id
+  locationName String
+  country      Country?   @relation(fields: [countryId], references: [id])
+  countryId    String?
+  property     Property[]
 }

@@ -75,7 +75,6 @@ Nest is [MIT licensed](LICENSE).
 
 Run Prisma Update Database:
 npx prisma migrate dev
-npm run prisma:dev:deploy
 
 Run The App:
 npm run db:dev:start

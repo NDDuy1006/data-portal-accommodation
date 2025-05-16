@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { PropertyType } from '@prisma/client';
 import {
   IsArray,
   IsEnum,
