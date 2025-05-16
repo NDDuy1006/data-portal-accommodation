@@ -47,6 +47,7 @@ model Property {
   PropertyAttribute PropertyAttribute[]
   PlaceType         PlaceType           @relation(fields: [placeTypeId], references: [id])
   placeTypeId       Int
+  PropertyCategory  PropertyCategory[]
 }
 
 model Image {
@@ -122,4 +123,19 @@ model PlaceType {
   id         Int        @id @default(autoincrement())
   typeName   String
   properties Property[]
+}
+
+model Category {
+  id               Int                @id @default(autoincrement())
+  categoryName     String
+  PropertyCategory PropertyCategory[]
+}
+
+model PropertyCategory {
+  propertyId Int
+  categoryId Int
+  property   Property @relation(fields: [propertyId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([propertyId, categoryId])
 }
